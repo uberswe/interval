@@ -1,6 +1,6 @@
 # interval
 
-Interval is a simple package which uses Gos time.Duration to perform different functions.
+Interval is a simple package which uses Golangs time.Duration to perform different functions.
 
 With the DoEvery functions it is possible to call a function in Golang every x seconds. Depending on the function you can do this in a blocking or asyncronous way.
 
