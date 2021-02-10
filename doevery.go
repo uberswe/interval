@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// DoEvery takes an interval of time.Duration or a string representing a time interval and then calls a provided function every interval
+// DoEvery is a blocking function that takes an interval of time.Duration or a string representing a time interval and then calls a provided function every interval
 func DoEvery(interval interface{}, do func(interval time.Duration, time time.Time), count int) error {
 	duration, err := interfaceToDuration(interval)
 	if err != nil {
@@ -14,6 +14,7 @@ func DoEvery(interval interface{}, do func(interval time.Duration, time time.Tim
 	return nil
 }
 
+// DoEveryWithDuration is a blocking function that takes an interval of time.Duration representing a time interval and then calls a provided function every interval
 func DoEveryWithDuration(interval time.Duration, do func(interval time.Duration, time time.Time), count int) {
 	tick := time.Tick(interval)
 	for range tick {
@@ -27,7 +28,8 @@ func DoEveryWithDuration(interval time.Duration, do func(interval time.Duration,
 	}
 }
 
-func DoEveryAsync(interval interface{}, do func(interval time.Duration, time time.Time), count int) (chan struct{}, error) {
+// DoEveryAsync is a non-blocking function that takes an interval of time.Duration or a string representing a time interval and then calls a provided function every interval
+func DoEveryAsync(interval interface{}, do func(interval time.Duration, time time.Time), count int) (chan int, error) {
 	duration, err := interfaceToDuration(interval)
 	if err != nil {
 		return nil, err
@@ -35,9 +37,10 @@ func DoEveryAsync(interval interface{}, do func(interval time.Duration, time tim
 	return DoEveryAsyncWithDuration(duration, do, count)
 }
 
-func DoEveryAsyncWithDuration(interval time.Duration, do func(interval time.Duration, time time.Time), count int) (chan struct{}, error) {
+// DoEveryAsyncWithDuration is a non-blocking function that takes an interval of time.Duration representing a time interval and then calls a provided function every interval
+func DoEveryAsyncWithDuration(interval time.Duration, do func(interval time.Duration, time time.Time), count int) (chan int, error) {
 	tick := time.NewTicker(interval)
-	exit := make(chan struct{})
+	exit := make(chan int)
 	go func() {
 		for {
 			select {
