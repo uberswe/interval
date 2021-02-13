@@ -5,20 +5,20 @@ import (
 )
 
 // DoEvery is a blocking function that takes an interval of time.Duration or a string representing a time interval and then calls a provided function every interval
-func DoEvery(interval interface{}, do func(interval time.Duration, time time.Time), count int) error {
+func DoEvery(interval interface{}, extra interface{}, do func(interval time.Duration, time time.Time, extra interface{}), count int) error {
 	duration, err := interfaceToDuration(interval)
 	if err != nil {
 		return err
 	}
-	DoEveryWithDuration(duration, do, count)
+	DoEveryWithDuration(duration, extra, do, count)
 	return nil
 }
 
 // DoEveryWithDuration is a blocking function that takes an interval of time.Duration representing a time interval and then calls a provided function every interval
-func DoEveryWithDuration(interval time.Duration, do func(interval time.Duration, time time.Time), count int) {
+func DoEveryWithDuration(interval time.Duration, extra interface{}, do func(interval time.Duration, time time.Time, extra interface{}), count int) {
 	tick := time.Tick(interval)
 	for range tick {
-		do(interval, time.Now().Local())
+		do(interval, time.Now().Local(), extra)
 		if count > 0 {
 			count--
 			if count == 0 {
@@ -29,23 +29,23 @@ func DoEveryWithDuration(interval time.Duration, do func(interval time.Duration,
 }
 
 // DoEveryAsync is a non-blocking function that takes an interval of time.Duration or a string representing a time interval and then calls a provided function every interval
-func DoEveryAsync(interval interface{}, do func(interval time.Duration, time time.Time), count int) (chan int, error) {
+func DoEveryAsync(interval interface{}, extra interface{}, do func(interval time.Duration, time time.Time, extra interface{}), count int) (chan int, error) {
 	duration, err := interfaceToDuration(interval)
 	if err != nil {
 		return nil, err
 	}
-	return DoEveryAsyncWithDuration(duration, do, count)
+	return DoEveryAsyncWithDuration(duration, extra, do, count)
 }
 
 // DoEveryAsyncWithDuration is a non-blocking function that takes an interval of time.Duration representing a time interval and then calls a provided function every interval
-func DoEveryAsyncWithDuration(interval time.Duration, do func(interval time.Duration, time time.Time), count int) (chan int, error) {
+func DoEveryAsyncWithDuration(interval time.Duration, extra interface{}, do func(interval time.Duration, time time.Time, extra interface{}), count int) (chan int, error) {
 	tick := time.NewTicker(interval)
 	exit := make(chan int)
 	go func() {
 		for {
 			select {
 			case <-tick.C:
-				do(interval, time.Now().Local())
+				do(interval, time.Now().Local(), extra)
 				if count > 0 {
 					count--
 					if count == 0 {

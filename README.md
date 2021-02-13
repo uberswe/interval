@@ -10,10 +10,10 @@ To call a function repeatedly at a set interval simply do this
 
 ```go
 func main() {
-	lambda := func(interval time.Duration, time time.Time) {
+	lambda := func(interval time.Duration, time time.Time, extra interface{}) {
 		log.Printf("do function called %s at %s\n", interval.String(), time.String())
 	}
-	err := interval.DoEvery("1s", lambda, -1)
+	err := interval.DoEvery("1s", nil, lambda, -1)
 	if err != nil {
 		log.Panicf("Error: %v", err)
 	}
@@ -27,10 +27,10 @@ You can use DoEveryAsync to call a function repeatedly in a non-blocking way lik
 
 ```go
 func main() {
-	lambda := func(interval time.Duration, time time.Time) {
+	lambda := func(interval time.Duration, time time.Time, extra interface{}) {
 		log.Printf("do function called %s at %s\n", interval.String(), time.String())
 	}
-	exit, err := interval.DoEveryAsync("1s", lambda, -1)
+	exit, err := interval.DoEveryAsync("1s", nil, lambda, -1)
 	if err != nil {
 		log.Panicf("Error: %v", err)
 	}

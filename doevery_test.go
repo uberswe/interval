@@ -9,11 +9,11 @@ func TestDoEvery(t *testing.T) {
 	start := time.Now().Local()
 	expected := 5
 	count := 0
-	lambda := func(interval time.Duration, time time.Time) {
+	lambda := func(interval time.Duration, time time.Time, extra interface{}) {
 		t.Logf("do function called")
 		count++
 	}
-	err := DoEvery("1ms", lambda, expected)
+	err := DoEvery("1ms", nil, lambda, expected)
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
@@ -30,11 +30,11 @@ func TestDoEveryAsync(t *testing.T) {
 	start := time.Now().Local()
 	expected := 5
 	count := 0
-	lambda := func(interval time.Duration, time time.Time) {
+	lambda := func(interval time.Duration, time time.Time, extra interface{}) {
 		t.Logf("do function called")
 		count++
 	}
-	_, err := DoEveryAsync("1ms", lambda, expected)
+	_, err := DoEveryAsync("1ms", nil, lambda, expected)
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
@@ -55,11 +55,11 @@ func TestDoEveryAsyncWithExit(t *testing.T) {
 	start := time.Now().Local()
 	expected := 5
 	count := 0
-	lambda := func(interval time.Duration, time time.Time) {
+	lambda := func(interval time.Duration, time time.Time, extra interface{}) {
 		t.Logf("do function called")
 		count++
 	}
-	exit, err := DoEveryAsync("1ms", lambda, expected)
+	exit, err := DoEveryAsync("1ms", nil, lambda, expected)
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
